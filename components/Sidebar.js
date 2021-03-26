@@ -34,12 +34,11 @@ function Sidebar() {
         }
     };
 
-    const chatAlreadyExists = (recipientEmail) => {
+    const chatAlreadyExists = (recipientEmail) =>
         !!chatsSnapshot?.docs.find(
             (chat) => 
             chat.data().users.find((user) => user === recipientEmail)?.length > 0
-            );
-    };
+        );
 
     return (
         <Container>
