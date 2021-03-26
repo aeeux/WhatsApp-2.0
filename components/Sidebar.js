@@ -22,7 +22,6 @@ function Sidebar() {
     return (
         <Container>
             <Header>
-                
                 <UserAvatar />
 
                 <IconsContainer>
