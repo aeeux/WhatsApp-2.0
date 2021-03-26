@@ -24,10 +24,12 @@ const Container = styled.div`
     `;
 
 const LoginContainer = styled.div`
-
+        display: flex;
+        flex-direction: column;
     `;
 
 const Logo = styled.img`
         height: 200px;
         width: 200px;
+        margin-bottom: 50px;
     `;
