@@ -15,7 +15,7 @@ function Sidebar() {
         if (!input) return null;
 
         if (EmailValidator.validate(input)) {
-            
+            // need to add the chat into the DB 'chats' collection.
         }
     }
 
