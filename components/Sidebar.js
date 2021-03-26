@@ -4,8 +4,11 @@ import ChatIcon from '@material-ui/icons/Chat';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import SearchIcon from '@material-ui/icons/Search';
 import * as EmailValidator from 'email-validator';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { auth, db } from '../firebase';
 
 function Sidebar() {
+    const [user] = useAuthState(auth);
 
     const createChat = () => {
         const input = prompt(
@@ -16,13 +19,16 @@ function Sidebar() {
 
         if (EmailValidator.validate(input)) {
             // need to add the chat into the DB 'chats' collection.
+            db.collection('chats').add({
+                users: [user.email, input],
+            });
         }
-    }
+    };
 
     return (
         <Container>
             <Header>
-                <UserAvatar />
+                <UserAvatar onClick={() => auth.signOut()} />
 
                 <IconsContainer>
 
