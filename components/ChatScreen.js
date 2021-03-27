@@ -9,9 +9,12 @@ import { useCollection } from 'react-firebase-hooks/firestore';
 import InsertEmoticonIcon from '@material-ui/icons/InsertEmoticon';
 import MicIcon from '@material-ui/icons/Mic';
 import Message from './Message';
+import { useState } from 'react';
+import firebase from 'firebase';
 
 function ChatScreen({ chat, messages }) {
     const [user] = useAuthState(auth);
+    const [input, setInput] = useState("");
     const router = useRouter();
     const [messagesSnapshot] = useCollection(
         db
@@ -34,6 +37,27 @@ function ChatScreen({ chat, messages }) {
                 />
             ))
         }
+    };
+
+    const sendMessage = (e) => {
+        e.preventDefault();
+
+        // Update the last seen...
+        db.collection("users").doc(user.uid).set(
+        {
+            lastSeen: firebase.firestore.FieldValue.serverTimestamp(),
+        }, 
+        { merge: true }
+        );
+
+        db.collection('chats').doc(router.query.id).collection('messages').add({
+            timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+            message: input,
+            user: user.email,
+            photoURL: user.photoURL,
+        });
+
+        setInput('');
     };
 
     return (
@@ -62,7 +86,8 @@ function ChatScreen({ chat, messages }) {
 
             <InputContainer>
                 <InsertEmoticonIcon />
-                <Input />
+                <Input value={input} onChange={e => setInput(e.target.value)} />
+                <button hidden disabled={!input} type="submit" onClick={sendMessage}>Send Message</button>
                 <MicIcon />
             </InputContainer>
         </Container>
@@ -75,7 +100,7 @@ const Container = styled.div`
 
     `;
 
-const Input = styled.div`
+const Input = styled.input`
         flex: 1;
         outline: 0;
         border: none;
